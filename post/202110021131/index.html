@@ -1,7 +1,0 @@
-<!DOCTYPE html><head><title>Fix Windows Power Options Ineffective - kkocdko's blog</title><meta name="description" content="Strange malfunction"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>Fix Windows Power Options Ineffective</h1><p>If you don&#39;t know what &quot;Power Options&quot; is, try <code>Win</code> + <code>R</code> and execute this code:</p><pre><code class="language-batch">rundll32 shell32.dll,Control_RunDLL PowerCfg.cpl @0,/editplan:SCHEME_BALANCED</code></pre><p>So I encountered this bug, the config&#39;s <strong>value changed, but not actually applied</strong>.</p><p>My solution is overwrite current <code>scheme</code> by other normal scheme.</p><p>Suppose current scheme is &quot;Balanced (SCHEME_BALANCED)&quot;, and overwrite it with &quot;Power Saver (SCHEME_MAX)&quot;:</p><pre><code class="language-batch">powercfg /s SCHEME_MAX
-powercfg /export %temp%\scheme.pow SCHEME_MAX
-powercfg /d SCHEME_BALANCED
-powercfg /import %temp%\scheme.pow SCHEME_BALANCED
-powercfg /changename SCHEME_BALANCED &quot;BALANCED&quot; &quot;&quot;
-powercfg /s SCHEME_BALANCED
-del %temp%\scheme.pow</code></pre></article></main>
