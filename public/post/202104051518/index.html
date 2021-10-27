@@ -1,0 +1,54 @@
+<!DOCTYPE html><head><title>Backup Data from VSCode Web - kkocdko's blog</title><meta name="description" content="Export / import the user data"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>Backup Data from VSCode Web</h1><blockquote><p>Tested on VSCode 1.56 ~ 1.59, may become invalid in a future version.</p></blockquote><h2 id="intro">Intro</h2><p>VSCode Web (like VSCode Remote, GitHub Codespaces) saves user data in <a href="https://developer.mozilla.org/docs/Web/API/IndexedDB_API">IndexedDB</a> which will be lost if you clear the browser storage.</p><p>This code snippet enables you to export and import the user data. Run on DevTools, please <strong>save your work</strong> before doing anything!</p><h2 id="code">Code</h2><pre><code class="language-javascript">(async function exportData() {
+  const json = {};
+  const decoder = new TextDecoder();
+  for (const { name: dbName } of await indexedDB.databases()) {
+    json[dbName] = {};
+    const req = indexedDB.open(dbName);
+    await new Promise((r) =&gt; (req.onsuccess = r));
+    for (const storeName of req.result.objectStoreNames) {
+      json[dbName][storeName] = {};
+      const transaction = req.result.transaction(storeName);
+      const store = transaction.objectStore(storeName);
+      const keysReq = store.getAllKeys();
+      const valuesReq = store.getAll();
+      await new Promise((r) =&gt; (transaction.oncomplete = r));
+      for (const k of keysReq.result) {
+        const v = valuesReq.result.shift();
+        const item = { type: v.constructor.name }; // String | Uint8Array
+        const str = item.type === &quot;String&quot; ? v : decoder.decode(v);
+        item.value = encodeURIComponent(str);
+        json[dbName][storeName][k] = item;
+      }
+    }
+  }
+  const link = document.createElement(&quot;a&quot;);
+  link.download = &quot;vscode-web-backup_&quot; + Date.now() + &quot;.json&quot;;
+  link.href = &quot;data:text/json,&quot; + encodeURIComponent(JSON.stringify(json));
+  link.click();
+})();</code></pre><pre><code class="language-javascript">(async function importData() {
+  const input = document.createElement(&quot;input&quot;);
+  input.type = &quot;file&quot;;
+  input.click();
+  await new Promise((r) =&gt; (input.onchange = r));
+  const reader = new FileReader();
+  reader.readAsText(input.files[0]);
+  await new Promise((r) =&gt; (reader.onload = r));
+  const encoder = new TextEncoder();
+  for (const [dbName, dbData] of Object.entries(JSON.parse(reader.result))) {
+    const req = indexedDB.open(dbName);
+    req.onupgradeneeded = ({ target: { result: db } }) =&gt;
+      Object.keys(dbData).forEach((name) =&gt; db.createObjectStore(name));
+    await new Promise((r) =&gt; (req.onsuccess = r));
+    for (const [storeName, storeData] of Object.entries(dbData)) {
+      const transaction = req.result.transaction(storeName, &quot;readwrite&quot;);
+      const store = transaction.objectStore(storeName);
+      store.clear(); // Avoid config conflict
+      for (const [key, { type, value }] of Object.entries(storeData)) {
+        const str = decodeURIComponent(value);
+        store.put(type === &quot;String&quot; ? str : encoder.encode(str), key);
+      }
+      await new Promise((r) =&gt; (transaction.oncomplete = r));
+    }
+  }
+  location.reload();
+})();</code></pre><h2 id="change-log">Change Log</h2><h3 id="20210729">20210729</h3><ul><li>Reduce code.</li></ul><h3 id="20210728">20210728</h3><ul><li>Update for VSCode <code>1.58</code>.</li></ul><h3 id="20210405">20210405</h3><ul><li>First version.</li></ul></article></main>

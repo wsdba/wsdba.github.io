@@ -1,0 +1,40 @@
+<!DOCTYPE html><head><title>注册表修改文件关联(默认程序) - kkocdko's blog</title><meta name="description" content="在 NT6+ 上通用"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>注册表修改文件关联(默认程序)</h1><p>由于各种原因（主要是安全方面考虑），Windows 中修改文件关联的 Api 一改再改，改了又改。</p><p>而直接修改注册表 + 刷新 Explorer 的方法，也许是比较方便的能兼容各个 Windows 版本（NT6+）的方案（也许需要管理员权限）。</p><h2 id="code">Code</h2><pre><code>[-HKEY_CURRENT_USER\Software\Classes\{{AppName}}.{{Extension}}]
+
+[HKEY_CURRENT_USER\Software\Classes\{{AppName}}.{{Extension}}]
+
+[HKEY_CURRENT_USER\Software\Classes\{{AppName}}.{{Extension}}\DefaultIcon]
+@=&quot;{{IconFile}},{{IconIndex}}&quot;
+
+[HKEY_CURRENT_USER\Software\Classes\{{AppName}}.{{Extension}}\shell]
+
+[HKEY_CURRENT_USER\Software\Classes\{{AppName}}.{{Extension}}\shell\open]
+
+[HKEY_CURRENT_USER\Software\Classes\{{AppName}}.{{Extension}}\shell\open\command]
+@=&quot;\&quot;{{AppPath}}\&quot; \&quot;%1\&quot;&quot;
+
+[HKEY_CURRENT_USER\Software\Classes\.{{Extension}}]
+@=&quot;{{AppName}}.{{Extension}}&quot;
+
+[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.{{Extension}}]
+&quot;Progid&quot;=&quot;{{AppName}}.{{Extension}}&quot;
+
+[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.{{Extension}}\OpenWithProgids]
+&quot;{{AppName}}.{{Extension}}&quot;=hex(0):
+
+[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.{{Extension}}\UserChoice]
+&quot;Progid&quot;=&quot;{{AppName}}.{{Extension}}&quot;</code></pre><p>示例：用 NodeJs 生成注册表文件</p><pre><code class="language-javascript">const fs = require(&quot;fs&quot;);
+const template = fs.readFileSync(&quot;template.txt&quot;).toString();
+const exts = &quot;mp3 mp4 m4a avi mkv flv&quot;;
+const appName = &quot;PotPlayerMini&quot;;
+const appPath = &quot;D:\\\\PotPlayer\\\\PotPlayerMini.exe&quot;; // Need 4 &#39;\\&#39;
+const iconIndex = &quot;0&quot;;
+let output = &quot;&quot;;
+for (const ext of exts.split(&quot; &quot;)) {
+  output += template
+    .replaceAll(&quot;{{AppName}}&quot;, appName)
+    .replaceAll(&quot;{{AppPath}}&quot;, appPath)
+    .replaceAll(&quot;{{Extension}}&quot;, ext)
+    .replaceAll(&quot;{{IconFile}}&quot;, appPath)
+    .replaceAll(&quot;{{IconIndex}}&quot;, iconIndex);
+}
+fs.writeFileSync(`output_${Date.now()}.reg`, output);</code></pre></article></main>

@@ -1,0 +1,25 @@
+<!DOCTYPE html><head><title>批量修改 PPT 字体样式 - kkocdko's blog</title><meta name="description" content="自动化，使用 VBA"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>批量修改 PPT 字体样式</h1><blockquote><p>MSDN：<a href="https://msdn.microsoft.com/en-us/vba/powerpoint-vba/articles/font-object-powerpoint">https://msdn.microsoft.com/en-us/vba/powerpoint-vba/articles/font-object-powerpoint</a></p></blockquote><h2 id="step-1">Step 1</h2><p>点击选项卡上的 <code>开发工具</code> &gt; <code>宏</code>，随便取个名字并创建。</p> <img src="/res/20180331-1928-001.webp" width="1366" height="688"><h2 id="step-2">Step 2</h2><p>复制以下代码到编辑框里边，覆盖原有内容。</p><pre><code class="language-vb">Sub ChangeFont()
+Dim oShape As Shape
+Dim oSlide As Slide
+Dim oTxtRange As TextRange
+On Error Resume Next
+For Each oSlide In ActivePresentation.Slides
+For Each oShape In oSlide.Shapes
+Set oTxtRange = oShape.TextFrame.TextRange
+If Not IsNull(oTxtRange) Then
+With oTxtRange.Font
+&#39;──────────────────────────────
+.Name = &quot;微软雅黑&quot; &#39;字体名称
+.NameFarEast = &quot;微软雅黑&quot; &#39;中文字体名称
+.NameOther = &quot;微软雅黑&quot; &#39;其他字体名称
+.Size = 36 &#39;字体大小
+.Color.RGB = RGB(0, 0, 0) &#39;字体颜色
+.Bold = False &#39;是否加粗
+.Italic = False &#39;是否倾斜
+.Underline = False &#39;是否有下划线
+&#39;──────────────────────────────
+End With
+End If
+Next
+Next
+End Sub</code></pre><ul><li><p>参照注释修改字体属性值即可。</p></li><li><p>可删除对应代码以保留原有属性。例：删除 <code>…&#39;字体大小</code> 这行代码，字体大小保持不变。</p></li><li><p>字体颜色使用 RGB 值表示，例如黑色 = <code>(0,0,0)</code>，白色 = <code>(255,255,255)</code>。</p></li><li><p>某些属性使用布尔类型，是 = <code>True</code>，否 = <code>False</code>。</p></li><li><p>除此之外还可修改下标、阴影效果等。请参阅 MSDN 文档。</p></li></ul><h2 id="step-3">Step 3</h2><p>按键盘 <code>F5</code> 或点击上方菜单栏：运行 &gt; 运行子过程。</p> <img src="/res/20180331-1928-002.webp" width="643" height="332"><ul><li>如果 PPT 页数较多，可能会无响应较长时间。</li></ul></article></main>
