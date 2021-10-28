@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+      <rss version="2.0">
+        <channel>
+          <title>kkocdko's blog</title>
+          <link>https://kkocdko.site</link>
+          <description>kkocdko's blog</description>
+          
+          <item>
+            <title>**Mongodb集成使用文档**</title>
+            <description>springboot集成mongodb</description>
+            <link>https://kkocdko.site/post/20211028937</link>
+          </item>
+          
+        </channel>
+      </rss>
