@@ -1,0 +1,1 @@
+node toolkit/generate.js && node toolkit/serve.js
