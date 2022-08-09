@@ -286,9 +286,9 @@ const pages = [];
       <?xml version="1.0" encoding="UTF-8"?>
       <rss version="2.0">
         <channel>
-          <title>kkocdko's blog</title>
+          <title>yy's blog</title>
           <link>${domain}</link>
-          <description>kkocdko's blog</description>
+          <description>yy's blog</description>
           ${posts}${({ id, title, description }) => `
           <item>
             <title>${title}</title>
