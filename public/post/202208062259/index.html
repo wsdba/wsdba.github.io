@@ -1,0 +1,120 @@
+<!DOCTYPE html><head><title>设计模式学习 - yy's blog</title><meta name="description" content="设计模式"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>设计模式学习</h1><h1 id="设计模式">设计模式</h1><h2 id="创建型模式">创建型模式</h2><h3 id="工厂模式">工厂模式</h3><h4 id="（1）-简单工厂模式-①">（1） 简单工厂模式 ①</h4><p>​ 在父类中提供一个创建对象的方法， 允许子类决定实例化对象的类型。</p><p>​ 我们在创建对象时不会对客户端暴露创建逻辑，并且是通过使用一个共同的接口来指向新创建的对象。</p><p>这是定义interface 接口的方式。</p><pre><code class="language-java">步骤 1
+创建一个接口:
+Shape.java
+public interface Shape {   void draw(); }
+
+ 步骤 2
+创建实现接口的实体类。
+Rectangle.java
+
+public class Rectangle implements Shape {    @Override   public void draw() {      System.out.println(&quot;Inside Rectangle::draw() method.&quot;);   } }
+
+Square.java
+public class Square implements Shape {    @Override   public void draw() {      System.out.println(&quot;Inside Square::draw() method.&quot;);   } }
+
+Circle.java
+public class Circle implements Shape {    @Override   public void draw() {      System.out.println(&quot;Inside Circle::draw() method.&quot;);   } }
+
+步骤 3
+
+创建一个工厂，生成基于给定信息的实体类的对象。
+
+ShapeFactory.java
+
+public class ShapeFactory {       //使用 getShape 方法获取形状类型的对象   public Shape getShape(String shapeType){      if(shapeType == null){         return null;      }              if(shapeType.equalsIgnoreCase(&quot;CIRCLE&quot;)){         return new Circle();      } else if(shapeType.equalsIgnoreCase(&quot;RECTANGLE&quot;)){         return new Rectangle();      } else if(shapeType.equalsIgnoreCase(&quot;SQUARE&quot;)){         return new Square();      }      return null;   } }
+ 步骤 4
+
+使用该工厂，通过传递类型信息来获取实体类的对象</code></pre><h4 id="（2）-简单工厂模式-②">（2） 简单工厂模式 ②</h4><p>这是定义一个类， 几个类继承的方式。</p><pre><code class="language-java">/**
+ * 
+ * 拿铁、美式咖啡、卡布奇诺等均为咖啡家族的一种产品
+ * 咖啡则作为一种抽象概念
+ * @author Lsj
+ *
+ */
+public abstract class Coffee {
+
+    /**
+     * 获取coffee名称
+     * @return
+     */
+    public abstract String getName();
+
+}
+
+
+/**
+ * 美式咖啡
+ * @author Lsj
+ *
+ */
+public class Americano extends Coffee {
+
+    @Override
+    public String getName() {
+        return &quot;美式咖啡&quot;;
+    }
+
+}
+
+
+/**
+ * 卡布奇诺
+ * @author Lsj
+ *
+ */
+public class Cappuccino extends Coffee {
+
+    @Override
+    public String getName() {
+        return &quot;卡布奇诺&quot;;
+    }
+
+}
+
+
+/**
+ * 拿铁
+ * @author Lsj
+ *
+ */
+public class Latte extends Coffee {
+
+    @Override
+    public String getName() {
+        return &quot;拿铁&quot;;
+    }
+
+}
+
+/**
+ * 简单工厂--用于创建不同类型的咖啡实例
+ * @author Lsj
+ *
+ */
+public class SimpleFactory {
+
+    /**
+     * 通过类型获取Coffee实例对象
+     * @param type 咖啡类型
+     * @return
+     */
+    public static Coffee createInstance(String type){
+        if(&quot;americano&quot;.equals(type)){
+            return new Americano();
+        }else if(&quot;cappuccino&quot;.equals(type)){
+            return new Cappuccino();
+        }else if(&quot;latte&quot;.equals(type)){
+            return new Latte();
+        }else{
+            throw new RuntimeException(&quot;type[&quot;+type+&quot;]类型不可识别，没有匹配到可实例化的对象！&quot;);
+        }
+    }
+
+    public static void main(String[] args) {
+        Coffee latte = SimpleFactory.createInstance(&quot;latte&quot;);
+        System.out.println(&quot;创建的咖啡实例为:&quot; + latte.getName());
+        Coffee cappuccino = SimpleFactory.createInstance(&quot;cappuccino&quot;);
+        System.out.println(&quot;创建的咖啡实例为:&quot; + cappuccino.getName());
+    }
+
+}</code></pre></article></main>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+      <rss version="2.0">
+        <channel>
+          <title>yy's blog</title>
+          <link>https://kkocdko.site</link>
+          <description>yy's blog</description>
+          
+          <item>
+            <title>设计模式学习</title>
+            <description>设计模式</description>
+            <link>https://kkocdko.site/post/202208062259</link>
+          </item>
+          
+          <item>
+            <title>Mongodb集成使用文档</title>
+            <description>springboot集成mongodb文档</description>
+            <link>https://kkocdko.site/post/202110281127</link>
+          </item>
+          
+          <item>
+            <title>typescript学习笔记</title>
+            <description>百尺竿头，更进一步</description>
+            <link>https://kkocdko.site/post/202110281120</link>
+          </item>
+          
+        </channel>
+      </rss>
