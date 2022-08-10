@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
       <rss version="2.0">
         <channel>
-          <title>kkocdko's blog</title>
+          <title>yy's blog</title>
           <link>https://kkocdko.site</link>
-          <description>kkocdko's blog</description>
+          <description>yy's blog</description>
+          
+          <item>
+            <title>设计模式学习</title>
+            <description>设计模式</description>
+            <link>https://kkocdko.site/post/202208062259</link>
+          </item>
           
           <item>
             <title>Mongodb集成使用文档</title>
