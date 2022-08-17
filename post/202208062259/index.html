@@ -1,0 +1,120 @@
+<!DOCTYPE html><head><title>设计模式学习 - yy's blog</title><meta name="description" content="设计模式"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>设计模式学习</h1><h1 id="设计模式">设计模式</h1><h2 id="创建型模式">创建型模式</h2><h3 id="工厂模式">工厂模式</h3><p><img src="https://raw.githubusercontent.com/cjwsjy/image/main/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20220815214716.png" alt=""></p><h4 id="（1）-简单工厂模式-①">（1） 简单工厂模式 ①</h4><p>​ 在父类中提供一个创建对象的方法， 允许子类决定实例化对象的类型。</p><p>​ 我们在创建对象时不会对客户端暴露创建逻辑，并且是通过使用一个共同的接口来指向新创建的对象。</p><p>这是定义interface 接口的方式。</p><pre><code class="language-java">步骤 1
+创建一个接口:
+Shape.java
+public interface Shape {   void draw(); }
+
+ 步骤 2
+创建实现接口的实体类。
+Rectangle.java
+
+public class Rectangle implements Shape {    @Override   public void draw() {      System.out.println(&quot;Inside Rectangle::draw() method.&quot;);   } }
+
+Square.java
+public class Square implements Shape {    @Override   public void draw() {      System.out.println(&quot;Inside Square::draw() method.&quot;);   } }
+
+Circle.java
+public class Circle implements Shape {    @Override   public void draw() {      System.out.println(&quot;Inside Circle::draw() method.&quot;);   } }
+
+步骤 3
+
+创建一个工厂，生成基于给定信息的实体类的对象。
+
+ShapeFactory.java
+
+public class ShapeFactory {       //使用 getShape 方法获取形状类型的对象   public Shape getShape(String shapeType){      if(shapeType == null){         return null;      }              if(shapeType.equalsIgnoreCase(&quot;CIRCLE&quot;)){         return new Circle();      } else if(shapeType.equalsIgnoreCase(&quot;RECTANGLE&quot;)){         return new Rectangle();      } else if(shapeType.equalsIgnoreCase(&quot;SQUARE&quot;)){         return new Square();      }      return null;   } }
+ 步骤 4
+
+使用该工厂，通过传递类型信息来获取实体类的对象</code></pre><h4 id="（2）-简单工厂模式-②">（2） 简单工厂模式 ②</h4><p>这是定义一个类， 几个类继承的方式。</p><pre><code class="language-java">/**
+ * 
+ * 拿铁、美式咖啡、卡布奇诺等均为咖啡家族的一种产品
+ * 咖啡则作为一种抽象概念
+ * @author Lsj
+ *
+ */
+public abstract class Coffee {
+
+    /**
+     * 获取coffee名称
+     * @return
+     */
+    public abstract String getName();
+
+}
+
+
+/**
+ * 美式咖啡
+ * @author Lsj
+ *
+ */
+public class Americano extends Coffee {
+
+    @Override
+    public String getName() {
+        return &quot;美式咖啡&quot;;
+    }
+
+}
+
+
+/**
+ * 卡布奇诺
+ * @author Lsj
+ *
+ */
+public class Cappuccino extends Coffee {
+
+    @Override
+    public String getName() {
+        return &quot;卡布奇诺&quot;;
+    }
+
+}
+
+
+/**
+ * 拿铁
+ * @author Lsj
+ *
+ */
+public class Latte extends Coffee {
+
+    @Override
+    public String getName() {
+        return &quot;拿铁&quot;;
+    }
+
+}
+
+/**
+ * 简单工厂--用于创建不同类型的咖啡实例
+ * @author Lsj
+ *
+ */
+public class SimpleFactory {
+
+    /**
+     * 通过类型获取Coffee实例对象
+     * @param type 咖啡类型
+     * @return
+     */
+    public static Coffee createInstance(String type){
+        if(&quot;americano&quot;.equals(type)){
+            return new Americano();
+        }else if(&quot;cappuccino&quot;.equals(type)){
+            return new Cappuccino();
+        }else if(&quot;latte&quot;.equals(type)){
+            return new Latte();
+        }else{
+            throw new RuntimeException(&quot;type[&quot;+type+&quot;]类型不可识别，没有匹配到可实例化的对象！&quot;);
+        }
+    }
+
+    public static void main(String[] args) {
+        Coffee latte = SimpleFactory.createInstance(&quot;latte&quot;);
+        System.out.println(&quot;创建的咖啡实例为:&quot; + latte.getName());
+        Coffee cappuccino = SimpleFactory.createInstance(&quot;cappuccino&quot;);
+        System.out.println(&quot;创建的咖啡实例为:&quot; + cappuccino.getName());
+    }
+
+}</code></pre><h3 id="链接">链接</h3><p><a href="https://developer.aliyun.com/article/933856?spm=a2c6h.12873639.article-detail.30.21fb7066CHQRiN#slide-6">https://developer.aliyun.com/article/933856?spm=a2c6h.12873639.article-detail.30.21fb7066CHQRiN#slide-6</a></p><p><a href="https://bbs.huaweicloud.com/blogs/348717#:~:text=%E5%85%88%E8%AF%B4%E7%BB%93%E8%AE%BA%EF%BC%9A-,%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%EF%BC%9A%E5%8F%AA%E6%9C%89%E5%94%AF%E4%B8%80%E5%B7%A5%E5%8E%82%EF%BC%88%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%EF%BC%89%EF%BC%8C%E4%B8%80%E4%B8%AA,%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%A4%9A%E4%B8%AA%E4%BA%A7%E5%93%81">https://bbs.huaweicloud.com/blogs/348717#:~:text=%E5%85%88%E8%AF%B4%E7%BB%93%E8%AE%BA%EF%BC%9A-,%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%EF%BC%9A%E5%8F%AA%E6%9C%89%E5%94%AF%E4%B8%80%E5%B7%A5%E5%8E%82%EF%BC%88%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%EF%BC%89%EF%BC%8C%E4%B8%80%E4%B8%AA,%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%A4%9A%E4%B8%AA%E4%BA%A7%E5%93%81</a></p><h3 id="优点">优点</h3><p>1.解耦</p><p>看起来好像只是把创建对象的权力给到了SimpleCoffeeFactory，没有什么其他操作，但是就是这个SimpleCoffeeFactory工厂类，已经将CoffeeStore类和Coffee对象解耦了，CoffeeStore不再需要管具体产品对象是如何创建的，只需要负责自己的事情就可以了，明确了各自的职责和权利，有利于整个软件体系结构的优化</p><ul><li>简单工厂</li><li><strong>优点</strong>：简单工厂可以使客户端免除直接创建对象的职责，能够根据需要创建出对应的产品。实现客户端和产品类代码分离。此外可以通过配置文件来实现不修改客户端代码的情况下添加新的具体产品类（改进）。</li><li><strong>缺点</strong>：违背开闭原则，如果需要新增其他产品类，就必须在工厂类中新增<code>if-else</code>逻辑判断（可以通过配置文件来改进）。但是整体来说，系统扩展还是相对其他工厂模式要困难。</li></ul><p>工厂方法模式</p><ul><li><strong>优点</strong>：完全实现开闭原则，实现了可扩展和更复杂的层次结构。明确了职责，具有多态性，适用于任何实体类。</li><li><strong>缺点</strong>：如果业务增加，会使得系统中类的个数成倍增加，提高了代码的复杂度</li><li></li></ul><p>抽象工厂模式</p><ul><li><strong>优点</strong>：增加分组比较容易，而且能大大减少工厂类的数量</li><li><strong>缺点</strong>：因为分组，所以分组中的产品扩展就比较困难，比如再新增一个Product3，就需要改动<code>AbstractFactory</code>、<code>FactoryA</code>和<code>FactoryB</code>几乎所有工厂类</li></ul></article></main>
