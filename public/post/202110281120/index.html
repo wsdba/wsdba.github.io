@@ -1,0 +1,90 @@
+<!DOCTYPE html><head><title>typescript学习笔记 - yy's blog</title><meta name="description" content="百尺竿头，更进一步"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>typescript学习笔记</h1><h1 id="五分钟入门">五分钟入门</h1><h3 id="1安装typescript">1.安装typescript</h3><p>npm install -g typescript</p><h3 id="2构建你的第一个typescript文件">2.构建你的第一个TypeScript文件</h3><pre><code class="language-javascript">function greeter(person) {
+    return &quot;Hello, &quot; + person;
+}
+
+let user = &quot;Jane User&quot;;
+
+document.body.innerHTML = greeter(user);</code></pre><h3 id="3编译代码">3.编译代码</h3><p>tsc greeter.ts</p><hr><h1 id="基础类型">基础类型</h1><h3 id="1布尔值">1.布尔值</h3><p>let isDone: boolean = false;</p><h3 id="2数字类型">2.数字类型</h3><pre><code class="language-javascript">let decLiteral: number = 6;  
+let hexLiteral: number = 0xf00d;  
+let binaryLiteral: number = 0b1010;  
+let octalLiteral: number = 0o744;  </code></pre><h3 id="3字符串">3.字符串</h3><pre><code class="language-javascript">let name: string = &quot;bob&quot;;
+
+name = &quot;smith&quot;;</code></pre><p>你还可以使用模版字符串，它可以定义多行文本和内嵌表达式。 这种字符串是被反引号包围（ `），并且以${ expr }这种形式嵌入表达式</p><pre><code class="language-javascript">let name: string = `Gene`;
+
+let age: number = 37;
+
+let sentence: string = `Hello, my name is ${ name }.
+
+I&#39;ll be ${ age + 1 } years old next month.`;</code></pre><p>这与下面定义sentence的方式效果相同：</p><pre><code class="language-javascript">let sentence: string = &quot;Hello, my name is &quot; + name + &quot;.\n\n&quot; +
+    &quot;I&#39;ll be &quot; + (age + 1) + &quot; years old next month.&quot;;</code></pre><h3 id="4数组">4.数组</h3><pre><code class="language-javascript">let list: number[] = [1, 2, 3];  
+let list: Array&lt;number&gt; = [1, 2, 3];</code></pre><h3 id="5元组-tuple">5.元组 Tuple</h3><p>元组类型允许表示一个已知元素数量和类型的数组，各元素的类型不必相同。 比如，你可以定义一对值分别为 string和number类型的元组。</p><pre><code class="language-javascript">let x: [string, number]; 
+
+x = [&#39;hello&#39;, 10]; // OK
+
+x = [10, &#39;hello&#39;]; // Error</code></pre><p>当访问一个已知索引的元素，会得到正确的类型：</p><pre><code class="language-javascript">console.log(x[0].substr(1)); // OK  
+console.log(x[1].substr(1)); // Error, &#39;number&#39; does not have &#39;substr&#39; </code></pre><p>当访问一个越界的元素，会使用联合类型替代：</p><pre><code class="language-javascript">x[3] = &#39;world&#39;; // OK, 字符串可以赋值给(string | number)类型  
+console.log(x[5].toString()); // OK, &#39;string&#39; 和 &#39;number&#39; 都有 toString  
+x[6] = true; // Error, 布尔不是(string | number)类型</code></pre><h3 id="6枚举">6.枚举</h3><p>enum类型是对JavaScript标准数据类型的一个补充</p><pre><code class="language-javascript">enum Color {Red, Green, Blue}  
+let c: Color = Color.Green;</code></pre><h3 id="7any">7.Any</h3><pre><code class="language-javascript">let notSure: any = 4;  
+notSure = &quot;maybe a string instead&quot;;  
+notSure = false;</code></pre><h3 id="8void">8.Void</h3><h3 id="9null-和-undefined">9.Null 和 Undefined</h3><h3 id="10never">10.Never</h3><p>永不存在的值的类型。 例如， never类型是那些总是会抛出异常或根本就不会有返回值的函数表达式或箭头函数表达式的返回值类型</p><h3 id="11object">11.Object</h3><h3 id="12let">12.let</h3><hr><h1 id="变量声明">变量声明</h1><p> const是对let的一个增强，它能阻止对一个变量再次赋值<br>var声明可以在包含它的函数，模块，命名空间或全局作用域内部任何位置被访问<br> 有些人称此为* var作用域或函数作用域*。 函数参数也使用函数作用域</p><pre><code class="language-javascript"> for (var i = 0; i &lt; 10; i++) {
+    setTimeout(function() { console.log(i); }, 100 * i);
+}
+
+for (let i = 0; i &lt; 10 ; i++) {
+    setTimeout(function() {console.log(i); }, 100 * i);
+}</code></pre><h3 id="重定义及屏蔽">重定义及屏蔽</h3><p> var声明时，它不在乎你声明多少次；你只会得到1个</p><p> var声明的变量时，我们简略地探究了一下在获取到了变量之后它的行为是怎样的。 直观地讲，每次进入一个作用域时，它创建了一个变量的 环境。 就算作用域内代码已经执行完毕，这个环境与其捕获的变量依然存在。</p><h3 id="const">const</h3><p>const拥有与 let相同的作用域规则，但是不能对它们重新赋值。</p><h3 id="使用最小特权原则，所有变量除了你计划去修改的都应该使用const">使用最小特权原则，所有变量除了你计划去修改的都应该使用const</h3><h3 id="解构数组-相当于将数组-部分值赋值给let的对象">解构数组 (相当于将数组 部分值赋值给let的对象)</h3><pre><code class="language-javascript">let input = [1, 2];
+let [first, second] = input;
+console.log(first); // outputs 1
+console.log(second); // outputs 2
+
+let [first, ...rest] = [1, 2, 3, 4];
+
+let [first] = [1, 2, 3, 4];</code></pre><h3 id="对象解构">对象解构</h3><pre><code class="language-javascript">let o = {
+    a: &quot;foo&quot;,
+    b: 12,
+    c: &quot;bar&quot;
+};
+let { a, b } = o;
+
+({ a, b } = { a: &quot;baz&quot;, b: 101 });
+
+属性重命名
+let { a: newName1, b: newName2 } = o;
+
+</code></pre><h3 id="默认值">默认值</h3><p>默认值可以让你在属性为 undefined 时使用缺省值：</p><p>function keepWholeObject(wholeObject: { a: string, b?: number }) { let { a, b = 1001 } = wholeObject; }</p><p>###展开 展开操作符正与解构相反。 它允许你将一个数组展开为另一个数组，或将一个对象展开为另一个对象。 例如：</p><pre><code class="language-javascript">let first = [1, 2];
+let second = [3, 4];
+let bothPlus = [0, ...first, ...second, 5];</code></pre><hr><h3 id="接口">接口</h3><p>TypeScript的核心原则之一是对值所具有的结构进行类型检查。</p><ul><li>option bags</li></ul><pre><code class="language-javascript">interface SquareConfig {
+  color?: string;
+  width?: number;
+}</code></pre><p>-readonly</p><pre><code class="language-javascript">interface Point {
+    readonly x: number;
+    readonly y: number;
+}</code></pre><p>readonly vs const 最简单判断该用readonly还是const的方法是看要把它做为变量使用还是做为一个属性。 做为变量使用的话用 const，若做为属性则使用readonly。</p><ul><li>实现接口<pre><code class="language-javascript">interface ClockInterface {
+  currentTime: Date;
+  setTime(d: Date);
+}
+</code></pre></li></ul><p>class Clock implements ClockInterface { currentTime: Date; setTime(d: Date) { this.currentTime = d; } constructor(h: number, m: number) { } }</p><pre><code>- 类是具有两个类型的：静态部分的类型和实例的类型
+-
+
+
+### &lt;注意&gt;
+- 1.TypeScript提供了静态的代码分析，它可以分析代码结构和提供的类型注解。
+- 2.++在TypeScript里，++只在两个类型内部的结构兼容那么这两个类型就是兼容的++。 ==这就允许我们在实现接口时候只要保证包含了接口要求的结构就可以，而不必明确地使用 implements语句。==++
+
+- 3.TypeScript支持JavaScript的新特性，比如支持基于类的面向对象编程。
+
+- 4.在构造函数的参数上使用public等同于创建了同名的成员变量
+
+- IIFE（立即执行函数表达式）
+
+- 5 ypeScript的核心原则之一是对值所具有的结构进行类型检查。  
+- 6 readonly vs const
+最简单判断该用readonly还是const的方法是看要把它做为变量使用还是做为一个属性。 做为变量使用的话用 const，若做为属性则使用readonly。
+
+
+
+```javascript
+;(fuction () {
+    // do something
+})()</code></pre><p>测试图片</p></article></main>
